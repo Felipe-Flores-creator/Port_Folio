@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <title>FelipeDev — Esferas del Dragón Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Cinzel:wght@700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<!-- Carga de inicio -->
+
+<body>
+    <div class="loading" id="loadingScreen">
+        <img src="assets/goku-zzz.gif" alt="Shenlong" class="loading-dragon">
+        <div class="loading-text">ESPERE UN MOMENTO</div>
+        <div class="loading-bar">
+            <div class="loading-bar-fill"></div>
+        </div>
+    </div>
+
+    <!-- Modal de Shenlong -->
+    <div id="shenlongModal" class="shenlong-modal">
+        <div class="shenlong-content">
+            <img src="assets/shenlarge.gif" alt="Shenlong" class="shenlong-img">
+            <div class="shenlong-dialog">
+                <h3>¡HE SIDO INVOCADO!</h3>
+                <p>Has reunido las 7 esferas. Ahora tienes el poder de <strong style="color:var(--primary);">invocar al
+                        programador</strong>.</p>
+                <p>Pídeme cualquier deseo o contáctalo directamente para tu próximo gran proyecto.</p>
+                <div class="contact-links">
+                    <a href="felipe.ignacio.geo@gmail.com" target="_blank" class="contact-btn">✉️ Contactar a
+                        AlexDEV</a>
+                    <button class="close-modal" id="closeShenlong">Deseo cumplido</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="canvas-container"></div>
+    <div class="ui-overlay header">
+        <div class="title-wrapper">
+            <h1 class="title">Felipe-Dev</h1>
+            <div class="subtitle">Frontend dev/ Lógica de Software </div>
+        </div>
+        <div class="dragon-counter" id="dragonCounter">
+            <img src="assets/Dragon Radar_1.png" alt="Dragon" class="counter-icon">
+            <span id="counterText">0 / 7 Reúne las esferas del dragón</span>
+        </div>
+    </div>
+    <div class="info-panel" id="infoPanel">
+        <button class="panel-close" id="panelClose" title="Cerrar">✕</button>
+        <div class="panel-header">
+            <div class="panel-dragon-ball" id="panelDragonBall">
+                <div class="dragon-ball-display"><span class="stars-display" id="starsDisplay">★</span></div>
+            </div>
+            <h2 class="panel-title" id="panelTitle">Discovering...</h2>
+            <div class="panel-subtitle" id="panelType">Ancient Artifact</div>
+        </div>
+        <div class="panel-content" id="panelContent"></div>
+    </div>
+    <div class="instructions" id="instructions">
+        <span>EXPLORE: Drag • Scroll • Click</span>
+    </div>
+
+    <!-- Control de música -->
+    <div class="music-control" id="musicControl">
+        <button class="music-btn" id="musicBtn" title="Reproducir/Pausar">🎵</button>
+        <div class="music-options" id="musicOptions"></div>
+    </div>
+
+    <!-- Three.js desde CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <!--load del modelo 3D de Shenlong-->
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+
+    <!-- Archivo principal de lógica JS -->
+    <script src="js/main.js"></script>
+</body>
+
+</html>

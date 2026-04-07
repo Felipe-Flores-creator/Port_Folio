@@ -1,0 +1,18 @@
+# Archivos de configuración local
+.qwen/
+
+# Scripts locales de desarrollo
+iniciar_portfolio.py
+Play_Portfolio.bat
+tmp_refactor.py
+
+# Archivos del sistema
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# Archivos de node_modules (si los hubiera)
+node_modules/
+
+# Logs
+*.log
