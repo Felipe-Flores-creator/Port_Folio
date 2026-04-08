@@ -1,4 +1,16 @@
 // =============================================
+// IMPORTS - Three.js ES Modules
+// =============================================
+import * as THREE from '../node_modules/three/build/three.module.js';
+import { OrbitControls } from '../node_modules/three/examples/jsm/controls/OrbitControls.js';
+import { GLTFLoader } from '../node_modules/three/examples/jsm/loaders/GLTFLoader.js';
+
+// Hacer THREE global para que todo el código funcione
+window.THREE = THREE;
+window.THREE.OrbitControls = OrbitControls;
+window.THREE.GLTFLoader = GLTFLoader;
+
+// =============================================
 // DATOS DEL PORTFOLIO - ESFERAS DEL DRAGÓN
 // =============================================
 const PORTFOLIO_DATA = [
