@@ -838,8 +838,8 @@ function createYamcha() {
             const size = box.getSize(new THREE.Vector3());
             const maxDim = Math.max(size.x, size.y, size.z);
 
-            // Tamaño TITÁNICO de 8.0
-            const targetScale = (maxDim > 0) ? (8.0 / maxDim) : 0.08;
+            // Tamaño normal de 0.4 para que no rompa la pantalla
+            const targetScale = (maxDim > 0) ? (0.4 / maxDim) : 0.08;
             yamcha.scale.setScalar(targetScale);
 
             // Orientación firme hacia el centro
@@ -1760,7 +1760,7 @@ function triggerShenlongEffect() {
         const box = new THREE.Box3().setFromObject(shenlong);
         const size = box.getSize(new THREE.Vector3());
         const maxDim = Math.max(size.x, size.y, size.z);
-        const targetScale = 35 / maxDim;  // Más grande (antes: 2)
+        const targetScale = 10 / maxDim;  // Más grande pero no excesivo
 
         // Agregar luz puntual para iluminar el dragón
         const dragonLight = new THREE.PointLight(0x00ff88, 2, 20);
