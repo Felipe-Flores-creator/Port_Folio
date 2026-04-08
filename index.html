@@ -73,11 +73,25 @@
         <div class="music-options" id="musicOptions"></div>
     </div>
 
-    <!-- Three.js desde CDN -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
-    <!--load del modelo 3D de Shenlong-->
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+    <!-- Three.js desde CDN - Versión unificada -->
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+        }
+    }
+    </script>
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+        import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+
+        // Exponer globalmente para main.js
+        window.THREE = THREE;
+        window.OrbitControls = OrbitControls;
+        window.GLTFLoader = GLTFLoader;
+    </script>
 
     <!-- Archivo principal de lógica JS -->
     <script src="js/main.js"></script>
