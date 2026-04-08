@@ -5,10 +5,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
-// Hacer THREE global para que todo el código funcione
-window.THREE = THREE;
-window.THREE.OrbitControls = OrbitControls;
-window.THREE.GLTFLoader = GLTFLoader;
+// Ya no mutamos THREE ya que es un módulo de solo lectura.
 
 // =============================================
 // DATOS DEL PORTFOLIO - ESFERAS DEL DRAGÓN
@@ -163,7 +160,7 @@ function init() {
     document.getElementById('canvas-container').appendChild(renderer.domElement);
 
     // Controles - Mejorados para vista panorámica
-    controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls = new OrbitControls(camera, renderer.domElement);
     controls.maxPolarAngle = Math.PI * 0.48;
     controls.minDistance = 5;
     controls.maxDistance = 40;
@@ -381,7 +378,7 @@ function createWater() {
 let kameHouse = null;
 
 function createKameHouse() {
-    const loader = new THREE.GLTFLoader();
+    const loader = new GLTFLoader();
     console.log('🏠 Cargando Kame House desde: assets/kamehouse.glb');
 
     loader.load(
@@ -425,7 +422,7 @@ function createKameHouse() {
 let planetKaioh = null;
 
 function createPlanetKaioh() {
-    const loader = new THREE.GLTFLoader();
+    const loader = new GLTFLoader();
     console.log('🪐 Cargando Planeta Kaioh desde: assets/planeta_do_sr.kaio.glb');
 
     loader.load(
@@ -523,7 +520,7 @@ function createTree(x, y, z) {
 let gokuKintoun = null;
 
 function createGokuKintoun() {
-    const loader = new THREE.GLTFLoader();
+    const loader = new GLTFLoader();
     console.log('☁️ Cargando Goku con Kintoun desde: assets/son_goku_and_kintoun_nimbus.glb');
 
     loader.load(
@@ -580,7 +577,7 @@ function createGokuKintoun() {
 let ooloTemple = null;
 
 function createOoloTemple() {
-    const loader = new THREE.GLTFLoader();
+    const loader = new GLTFLoader();
     console.log('🏯 Cargando Oolo Temple desde: assets/wii_-_dragon_ball_revenge_of_king_piccolo_-_oolo.glb');
 
     loader.load(
@@ -622,7 +619,7 @@ function createOoloTemple() {
 let krillin = null;
 
 function createKrillin() {
-    const loader = new THREE.GLTFLoader();
+    const loader = new GLTFLoader();
     console.log('🥋 Cargando Krillin desde: assets/krillin.glb');
 
     // Buscar una posición con altura de montaña (> 2.0 para montaña alta)
@@ -686,7 +683,7 @@ function createKrillin() {
 let tienShinhan = null;
 
 function createTienShinhan() {
-    const loader = new THREE.GLTFLoader();
+    const loader = new GLTFLoader();
     console.log('🥋 Cargando Tien Shinhan desde: assets/Ten_chin_han.glb');
 
     // Buscamos el pico exacto de la montaña en la zona noroeste (no tan alejada)
@@ -745,7 +742,7 @@ function createTienShinhan() {
 let chiaotzu = null;
 
 function createChiaotzu() {
-    const loader = new THREE.GLTFLoader();
+    const loader = new GLTFLoader();
     console.log('🥋 Cargando Chiaotzu desde: assets/chiaotzu_-_dragon_ball.glb');
 
     // Buscamos un pico de montaña en una zona marginal DIFERENTE (Noreste)
@@ -806,7 +803,7 @@ function createChiaotzu() {
 let yamcha = null;
 
 function createYamcha() {
-    const loader = new THREE.GLTFLoader();
+    const loader = new GLTFLoader();
     console.log('🥋 Cargando Yamcha desde: assets/yamcha_db.glb');
 
     // Buscamos un pico un poquitito más adelante que la montaña trasera
@@ -869,7 +866,7 @@ function createYamcha() {
 let terodactilo = null;
 
 function createTerodactilo() {
-    const loader = new THREE.GLTFLoader();
+    const loader = new GLTFLoader();
     console.log('🦖 Cargando Terodáctilo desde: assets/terodactilo_dragon_ball.glb');
 
     loader.load(
@@ -926,7 +923,7 @@ function createTerodactilo() {
 let namekSpaceship = null;
 
 function createNamekSpaceship() {
-    const loader = new THREE.GLTFLoader();
+    const loader = new GLTFLoader();
     console.log('🛸 Cargando Nave de Namek desde: assets/namek_spaceship.glb');
 
     // Cambiamos a una montaña más alta y visible (cerca de una de las esquinas del terreno)
@@ -983,7 +980,7 @@ function createNamekSpaceship() {
 let gregory = null;
 
 function createGregory() {
-    const loader = new THREE.GLTFLoader();
+    const loader = new GLTFLoader();
     console.log('🦗 Cargando Gregory desde: assets/gregory_-_dragon_ball.glb');
 
     loader.load(
@@ -1040,7 +1037,7 @@ function createGregory() {
 let arale = null;
 
 function createArale() {
-    const loader = new THREE.GLTFLoader();
+    const loader = new GLTFLoader();
     console.log('🌸 Cargando Arale desde: assets/dragon_ball_arale.glb');
 
     // Buscamos el pico exacto de la montaña en esa zona alejada
@@ -1108,7 +1105,7 @@ function createArale() {
 let bulmaCar = null;
 
 function createBulma() {
-    const loader = new THREE.GLTFLoader();
+    const loader = new GLTFLoader();
     console.log('🏎️ Cargando Bulma desde: assets/caroo_bulma.glb');
 
     // Buscamos una zona firme en un cuadrante LIMPIO de áboles (x: 0 a 3, z: -6 a -2)
@@ -1171,7 +1168,7 @@ function createBulma() {
 let bulmaMountain = null;
 
 function createBulmaMountain() {
-    const loader = new THREE.GLTFLoader();
+    const loader = new GLTFLoader();
     console.log('🏔️👩 Cargando Bulma de montaña desde: assets/bulma_-_dragon_ball.glb');
 
     loader.load(
@@ -1220,7 +1217,7 @@ function createBulmaMountain() {
 let masterRoshi = null;
 
 function createMasterRoshi() {
-    const loader = new THREE.GLTFLoader();
+    const loader = new GLTFLoader();
     console.log('👴 Cargando Maestro Roshi desde: assets/master_roshi.glb');
 
     loader.load(
@@ -1261,7 +1258,7 @@ function createMasterRoshi() {
 let piccoloDaimaku = null;
 
 function createPiccoloDaimaku() {
-    const loader = new THREE.GLTFLoader();
+    const loader = new GLTFLoader();
     console.log('👹 Cargando Piccolo Daimaku desde: assets/piccolo_daimaku_-_dragon_ball.glb');
 
     loader.load(
@@ -1307,7 +1304,7 @@ function createPiccoloDaimaku() {
 let timeMachine = null;
 
 function createTimeMachine() {
-    const loader = new THREE.GLTFLoader();
+    const loader = new GLTFLoader();
     console.log('⏰ Cargando Máquina del tiempo desde: assets/maquina_del_tiempo_dragon_ball.glb');
 
     loader.load(
@@ -1647,7 +1644,7 @@ function unifyLightSequence() {
 
 function triggerShenlongEffect() {
     console.log('🐉 Iniciando efecto Shenlong...');
-    console.log('🐉 GLTFLoader disponible:', typeof THREE.GLTFLoader !== 'undefined');
+    console.log('🐉 GLTFLoader disponible:', typeof GLTFLoader !== 'undefined');
 
     // Ocultar las esferas cuando se transforman
     markers.forEach(ball => {
@@ -1793,8 +1790,8 @@ function triggerShenlongEffect() {
     }
 
     // Intentar cargar modelo GLB
-    if (typeof THREE.GLTFLoader !== 'undefined') {
-        const loader = new THREE.GLTFLoader();
+    if (typeof GLTFLoader !== 'undefined') {
+        const loader = new GLTFLoader();
         console.log('🐉 Cargando modelo desde: assets/dragon_ball_z_shenlong.glb');
 
         loader.load(
