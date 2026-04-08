@@ -1,9 +1,9 @@
 // =============================================
 // IMPORTS - Three.js ES Modules
 // =============================================
-import * as THREE from '../node_modules/three/build/three.module.js';
-import { OrbitControls } from '../node_modules/three/examples/jsm/controls/OrbitControls.js';
-import { GLTFLoader } from '../node_modules/three/examples/jsm/loaders/GLTFLoader.js';
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 // Hacer THREE global para que todo el código funcione
 window.THREE = THREE;

@@ -1,0 +1,23 @@
+{
+  "name": "port_folio",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Felipe-Flores-creator/Port_Folio.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Felipe-Flores-creator/Port_Folio/issues"
+  },
+  "homepage": "https://github.com/Felipe-Flores-creator/Port_Folio#readme",
+  "description": "",
+  "dependencies": {
+    "three": "^0.152.2"
+  }
+}
