@@ -200,8 +200,8 @@ function init() {
     // Goku con Kintoun
     createGokuKintoun();
 
-    // Oolo Temple (sobre montaña)
-    createOoloTemple();
+    // Oolo Temple (sobre montaña) - COMENTADO PORQUE EL ARCHIVO NO EXISTE
+    // createOoloTemple();
 
     // Krillin (sobre montaña)
     createKrillin();
@@ -382,7 +382,7 @@ function createKameHouse() {
     console.log('🏠 Cargando Kame House desde: assets/kamehouse.glb');
 
     loader.load(
-        'assets/kamehouse.glb',
+        'https://media.githubusercontent.com/media/Felipe-Flores-creator/Port_Folio/main/assets/kamehouse.glb',
         (gltf) => {
             console.log('🏠 Kame House cargada exitosamente!', gltf);
             kameHouse = gltf.scene;
@@ -426,7 +426,7 @@ function createPlanetKaioh() {
     console.log('🪐 Cargando Planeta Kaioh desde: assets/planeta_do_sr.kaio.glb');
 
     loader.load(
-        'assets/planeta_do_sr.kaio.glb',
+        'https://media.githubusercontent.com/media/Felipe-Flores-creator/Port_Folio/main/assets/planeta_do_sr.kaio.glb',
         (gltf) => {
             console.log('🪐 Planeta Kaioh cargado exitosamente!', gltf);
             planetKaioh = gltf.scene;
@@ -524,7 +524,7 @@ function createGokuKintoun() {
     console.log('☁️ Cargando Goku con Kintoun desde: assets/son_goku_and_kintoun_nimbus.glb');
 
     loader.load(
-        'assets/son_goku_and_kintoun_nimbus.glb',
+        'https://media.githubusercontent.com/media/Felipe-Flores-creator/Port_Folio/main/assets/son_goku_and_kintoun_nimbus.glb',
         (gltf) => {
             console.log('☁️ Goku cargado exitosamente!', gltf);
             gokuKintoun = gltf.scene;
@@ -581,7 +581,7 @@ function createOoloTemple() {
     console.log('🏯 Cargando Oolo Temple desde: assets/wii_-_dragon_ball_revenge_of_king_piccolo_-_oolo.glb');
 
     loader.load(
-        'assets/wii_-_dragon_ball_revenge_of_king_piccolo_-_oolo.glb',
+        'https://media.githubusercontent.com/media/Felipe-Flores-creator/Port_Folio/main/assets/wii_-_dragon_ball_revenge_of_king_piccolo_-_oolo.glb',
         (gltf) => {
             console.log('🏯 Oolo Temple cargado exitosamente!', gltf);
             ooloTemple = gltf.scene;
@@ -645,7 +645,7 @@ function createKrillin() {
     console.log(`🥋 Mejor posición para Krillin: (${bestPos.x}, ${bestPos.z}) con altura ${bestHeight.toFixed(2)}`);
 
     loader.load(
-        'assets/krillin.glb',
+        'https://media.githubusercontent.com/media/Felipe-Flores-creator/Port_Folio/main/assets/krillin.glb',
         (gltf) => {
             console.log('🥋 Krillin cargado exitosamente!', gltf);
             krillin = gltf.scene;
@@ -705,7 +705,7 @@ function createTienShinhan() {
     console.log(`🥋 Mejor posición encontrada para Tien: (${shipX}, ${shipZ}) h=${hValue}`);
 
     loader.load(
-        'assets/Ten_chin_han.glb',
+        'https://media.githubusercontent.com/media/Felipe-Flores-creator/Port_Folio/main/assets/Ten_chin_han.glb',
         (gltf) => {
             console.log('🥋 Tien Shinhan cargado exitosamente!', gltf);
             tienShinhan = gltf.scene;
@@ -763,7 +763,7 @@ function createChiaotzu() {
     }
 
     loader.load(
-        'assets/chiaotzu_-_dragon_ball.glb',
+        'https://media.githubusercontent.com/media/Felipe-Flores-creator/Port_Folio/main/assets/chiaotzu_-_dragon_ball.glb',
         (gltf) => {
             console.log('🥋 Chiaotzu cargado exitosamente!', gltf);
             chiaotzu = gltf.scene;
@@ -824,7 +824,7 @@ function createYamcha() {
     }
 
     loader.load(
-        'assets/yamcha_db.glb',
+        'https://media.githubusercontent.com/media/Felipe-Flores-creator/Port_Folio/main/assets/yamcha_db.glb',
         (gltf) => {
             console.log('🥋 Yamcha cargado exitosamente!', gltf);
             yamcha = gltf.scene;
@@ -870,7 +870,7 @@ function createTerodactilo() {
     console.log('🦖 Cargando Terodáctilo desde: assets/terodactilo_dragon_ball.glb');
 
     loader.load(
-        'assets/terodactilo_dragon_ball.glb',
+        'https://media.githubusercontent.com/media/Felipe-Flores-creator/Port_Folio/main/assets/terodactilo_dragon_ball.glb',
         (gltf) => {
             console.log('🦖 Terodáctilo cargado exitosamente!', gltf);
             terodactilo = gltf.scene;
@@ -932,7 +932,7 @@ function createNamekSpaceship() {
     const h = getTerrainHeight(shipX, shipZ);
 
     loader.load(
-        'assets/namek_spaceship.glb',
+        'https://media.githubusercontent.com/media/Felipe-Flores-creator/Port_Folio/main/assets/namek_spaceship.glb',
         (gltf) => {
             console.log('🛸 Nave de Namek cargada exitosamente!', gltf);
             namekSpaceship = gltf.scene;
@@ -984,7 +984,7 @@ function createGregory() {
     console.log('🦗 Cargando Gregory desde: assets/gregory_-_dragon_ball.glb');
 
     loader.load(
-        'assets/gregory_-_dragon_ball.glb',
+        'https://media.githubusercontent.com/media/Felipe-Flores-creator/Port_Folio/main/assets/gregory_-_dragon_ball.glb',
         (gltf) => {
             console.log('🦗 Gregory cargado exitosamente!', gltf);
             gregory = gltf.scene;
@@ -1057,7 +1057,7 @@ function createArale() {
     }
 
     loader.load(
-        'assets/dragon_ball_arale.glb',
+        'https://media.githubusercontent.com/media/Felipe-Flores-creator/Port_Folio/main/assets/dragon_ball_arale.glb',
         (gltf) => {
             console.log('🌸 Arale cargada exitosamente!', gltf);
             arale = gltf.scene;
@@ -1128,7 +1128,7 @@ function createBulma() {
     }
 
     loader.load(
-        'assets/caroo_bulma.glb',
+        'https://media.githubusercontent.com/media/Felipe-Flores-creator/Port_Folio/main/assets/caroo_bulma.glb',
         (gltf) => {
             console.log('🏎️ Bulma cargada exitosamente!', gltf);
             bulmaCar = gltf.scene;
@@ -1172,7 +1172,7 @@ function createBulmaMountain() {
     console.log('🏔️👩 Cargando Bulma de montaña desde: assets/bulma_-_dragon_ball.glb');
 
     loader.load(
-        'assets/bulma_-_dragon_ball.glb',
+        'https://media.githubusercontent.com/media/Felipe-Flores-creator/Port_Folio/main/assets/bulma_-_dragon_ball.glb',
         (gltf) => {
             console.log('🏔️👩 Bulma de montaña cargada exitosamente!', gltf);
             bulmaMountain = gltf.scene;
@@ -1221,7 +1221,7 @@ function createMasterRoshi() {
     console.log('👴 Cargando Maestro Roshi desde: assets/master_roshi.glb');
 
     loader.load(
-        'assets/master_roshi.glb',
+        'https://media.githubusercontent.com/media/Felipe-Flores-creator/Port_Folio/main/assets/master_roshi.glb',
         (gltf) => {
             console.log('👴 Maestro Roshi cargado exitosamente!', gltf);
             masterRoshi = gltf.scene;
@@ -1262,7 +1262,7 @@ function createPiccoloDaimaku() {
     console.log('👹 Cargando Piccolo Daimaku desde: assets/piccolo_daimaku_-_dragon_ball.glb');
 
     loader.load(
-        'assets/piccolo_daimaku_-_dragon_ball.glb',
+        'https://media.githubusercontent.com/media/Felipe-Flores-creator/Port_Folio/main/assets/piccolo_daimaku_-_dragon_ball.glb',
         (gltf) => {
             console.log('👹 Piccolo Daimaku cargado exitosamente!', gltf);
             piccoloDaimaku = gltf.scene;
@@ -1308,7 +1308,7 @@ function createTimeMachine() {
     console.log('⏰ Cargando Máquina del tiempo desde: assets/maquina_del_tiempo_dragon_ball.glb');
 
     loader.load(
-        'assets/maquina_del_tiempo_dragon_ball.glb',
+        'https://media.githubusercontent.com/media/Felipe-Flores-creator/Port_Folio/main/assets/maquina_del_tiempo_dragon_ball.glb',
         (gltf) => {
             console.log('⏰ Máquina del tiempo cargada exitosamente!', gltf);
             timeMachine = gltf.scene;
@@ -1795,7 +1795,7 @@ function triggerShenlongEffect() {
         console.log('🐉 Cargando modelo desde: assets/dragon_ball_z_shenlong.glb');
 
         loader.load(
-            'assets/dragon_ball_z_shenlong.glb',
+            'https://media.githubusercontent.com/media/Felipe-Flores-creator/Port_Folio/main/assets/dragon_ball_z_shenlong.glb',
             (gltf) => {
                 console.log('🐉 Modelo cargado exitosamente!', gltf);
                 window.shenlongModel = gltf.scene;
