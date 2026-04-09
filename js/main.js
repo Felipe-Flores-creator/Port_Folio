@@ -88,6 +88,10 @@ let raycaster, mouse;
 let hoveredBall = null;
 let isPanelOpen = false;
 let terrain;
+let isWebGLContextLost = false;
+
+// Registro de animaciones de modelos (centralizado)
+let animatedModels = [];
 
 // Animación de cámara de introducción
 let cameraIntroAnimation = {
@@ -95,7 +99,7 @@ let cameraIntroAnimation = {
     progress: 0,
     startPos: new THREE.Vector3(-20, 15, 20),
     endPos: new THREE.Vector3(-12, 10, 12),
-    duration: 3.0 // segundos
+    duration: 5.0 // segundos (más suave)
 };
 
 // =============================================
@@ -124,36 +128,65 @@ function init() {
     // Escena
     scene = new THREE.Scene();
     scene.background = new THREE.Color(0xd9e2ec); // Azul cielo claro
-    scene.fog = new THREE.FogExp2(0xd9e2ec, 0.05);
+    scene.fog = null; // Niebla desactivada para asegurar visibilidad total
 
-    // Renderizador
-    try {
-        renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, failIfMajorPerformanceCaveat: false });
-    } catch (e) {
-        console.warn("Fallo al crear WebGLRenderer con configuración avanzada. Intentando fallback...", e);
-        try {
-            renderer = new THREE.WebGLRenderer();
-        } catch (e2) {
-            document.body.innerHTML = `
-                <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;background:#d9e2ec;font-family:sans-serif;color:#333;text-align:center;padding:20px;">
-                    <h1 style="color:#d32f2f; margin-bottom: 10px;">Renderizado 3D no compatible ⚠️</h1>
-                    <p>Tu navegador o dispositivo bloqueó la creación del contexto WebGL.</p>
-                    <ul style="text-align:left;line-height:1.6;margin-top:20px;background:#fff;padding:20px 40px;border-radius:8px;box-shadow:0 4px 6px rgba(0,0,0,0.1);">
-                        <li>Activa la <strong>"Aceleración por Hardware"</strong> en tu navegador.</li>
-                        <li>Cierra otras pestañas pesadas (límite de contextos 3D alcanzado).</li>
-                        <li>Actualiza los controladores de video de tu sistema.</li>
-                    </ul>
-                </div>
-            `;
-            throw e2;
+    // Renderizador - Configuración ultra-compatible para evitar fallos de driver
+    function createRenderer() {
+        const configs = [
+            { antialias: false, alpha: false, powerPreference: 'default', stencil: false }, // Fallback máximo
+            { antialias: false, alpha: true, powerPreference: 'low-power' },
+            { antialias: false, alpha: false }
+        ];
+
+        for (let config of configs) {
+            try {
+                const r = new THREE.WebGLRenderer(config);
+                console.log("✅ Renderer creado con configuración:", config);
+                return r;
+            } catch (e) {
+                console.warn("⚠️ Falló intento de renderer:", config, e);
+            }
         }
+        return null;
     }
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.25)); // Optimizado (antes: 2)
+
+    renderer = createRenderer();
+
+    if (!renderer) {
+        document.body.innerHTML = `
+            <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;background:#1a1a1a;color:#fff;text-align:center;padding:20px;font-family:'Outfit',sans-serif;">
+                <h1 style="color:#f5c542; font-size:2rem; margin-bottom: 10px;">LÍMITE DE NAVEGADOR ALCANZADO ⚠️</h1>
+                <p style="max-width:500px; line-height:1.6; opacity:0.8;">El sistema agotó los contextos WebGL disponibles o la aceleración por hardware está desactivada.</p>
+                <div style="margin:25px; padding:20px; background:rgba(255,255,255,0.05); border-radius:12px;">
+                    <p><strong>Para solucionar esto:</strong></p>
+                    <ol style="text-align:left; display:inline-block; margin-top:10px;">
+                        <li>Cierra otras pestañas de este proyecto.</li>
+                        <li>Reinicia tu navegador completamente.</li>
+                        <li>Verifica "Aceleración por Hardware" en Configuración.</li>
+                    </ol>
+                </div>
+                <button onclick="location.reload()" style="background:#f5c542; border:none; padding:12px 30px; border-radius:30px; color:#000; font-weight:bold; cursor:pointer; transition:0.3s; box-shadow:0 4px 15px rgba(245,197,66,0.3);">REINTENTAR AHORA</button>
+            </div>
+        `;
+        return;
+    }
+
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFShadowMap; // Más rápido que PCFSoftShadowMap
-    renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.2;
+    renderer.shadowMap.enabled = false;
+    renderer.toneMapping = THREE.NoToneMapping;
+
+    // Gestión de contexto WebGL
+    renderer.domElement.addEventListener('webglcontextlost', (event) => {
+        event.preventDefault();
+        console.warn('⚠️ Contexto WebGL perdido. Pausando renderizado.');
+        isWebGLContextLost = true;
+    });
+
+    renderer.domElement.addEventListener('webglcontextrestored', () => {
+        console.log('✅ Contexto WebGL restaurado.');
+        isWebGLContextLost = false;
+    });
 
 
 
@@ -166,14 +199,17 @@ function init() {
     controls.maxDistance = 40;
     controls.target.set(0, 2, 0);
     controls.enableDamping = true;
-    controls.dampingFactor = 0.08;
+    controls.dampingFactor = 0.05;
     controls.enablePan = true;
+    controls.rotateSpeed = 0.5;
+    controls.zoomSpeed = 0.8;
+    controls.panSpeed = 0.5;
 
     // Luces
     const mainLight = new THREE.DirectionalLight(0xffffff, 1.2);
     mainLight.position.set(10, 20, 10);
-    mainLight.castShadow = true;
-    mainLight.shadow.mapSize.set(1024, 1024); // Reducido (antes: 2048)
+    mainLight.castShadow = false; // Desactivadas las sombras de la luz
+    // mainLight.shadow.mapSize.set(1024, 1024); // Reducido (antes: 2048)
     scene.add(mainLight);
 
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
@@ -270,7 +306,7 @@ function init() {
     }, 6000);
 
 
-    animate();
+    requestAnimationFrame(animate);
 }
 
 // =============================================
@@ -279,7 +315,7 @@ function init() {
 function createBackgroundStars() {
     const geometry = new THREE.BufferGeometry();
     const vertices = [];
-    for (let i = 0; i < 1000; i++) { // Reducido para mejor rendimiento (antes 3000)
+    for (let i = 0; i < 100; i++) { // Reducido a 100 partículas para máximo rendimiento
         vertices.push(
             THREE.MathUtils.randFloatSpread(100),
             THREE.MathUtils.randFloat(-10, 50),
@@ -303,14 +339,14 @@ function createBackgroundStars() {
 // =============================================
 function createTerrain() {
     const size = 20;
-    const segments = 80; // Reducido para evitar ralentizaciones (antes 150x150)
+    const segments = 80;
     const geometry = new THREE.PlaneGeometry(size, size, segments, segments);
     geometry.rotateX(-Math.PI / 2);
 
     const vertices = geometry.attributes.position.array;
     const colors = [];
     const colorSoil = new THREE.Color('#3d2b1f'); // Tierra base
-    const colorGrass = new THREE.Color('#2d5a27'); // Verde oscuro realista
+    const colorGrass = new THREE.Color('#d2b48c'); // Café muy claro
     const colorMoss = new THREE.Color('#1a3a16'); // Verde bosque profundo
     const colorWater = new THREE.Color('#215e7d'); // Agua más natural
 
@@ -335,9 +371,6 @@ function createTerrain() {
         colors.push(color.r * variation, color.g * variation, color.b * variation);
     }
 
-
-
-
     geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
     geometry.computeVertexNormals();
 
@@ -348,8 +381,8 @@ function createTerrain() {
     });
 
     terrain = new THREE.Mesh(geometry, material);
-    terrain.receiveShadow = true;
-    terrain.castShadow = true;
+    terrain.receiveShadow = false;
+    terrain.castShadow = false;
     scene.add(terrain);
 }
 
@@ -360,11 +393,10 @@ function createWater() {
     const geometry = new THREE.PlaneGeometry(16, 16);
     geometry.rotateX(-Math.PI / 2);
 
-    const material = new THREE.MeshPhongMaterial({
+    const material = new THREE.MeshLambertMaterial({
         color: 0x4db2ff,
         transparent: true,
-        opacity: 0.5,
-        shininess: 30, // Menos brillo para cálculos más rápidos
+        opacity: 0.5
     });
 
     const water = new THREE.Mesh(geometry, material);
@@ -447,14 +479,12 @@ function createPlanetKaioh() {
             scene.add(planetKaioh);
             console.log('🪐 Planeta Kaioh agregado. Tamaño:', size, 'Escala:', targetScale);
 
-            // Animación de rotación lenta
-            const rotatePlanet = () => {
-                if (planetKaioh) {
-                    planetKaioh.rotation.y += 0.002;
-                    requestAnimationFrame(rotatePlanet);
-                }
-            };
-            rotatePlanet();
+            // Registrar animación centralizada
+            animatedModels.push({
+                type: 'rotation',
+                object: planetKaioh,
+                speed: 0.002
+            });
         },
         (xhr) => {
             const percent = (xhr.loaded / xhr.total * 100).toFixed(0);
@@ -545,21 +575,17 @@ function createGokuKintoun() {
             scene.add(gokuKintoun);
             console.log('☁️ Goku agregado. Tamaño:', size, 'Escala:', targetScale);
 
-            // Animación de vuelo - círculos pequeños cerca del centro
-            let time = 0;
-            const flyAnim = () => {
-                time += 0.005;
-                if (gokuKintoun) {
-                    // Mantener la altura flotando con pequeño vaivén
-                    gokuKintoun.position.y = 5.5 + Math.sin(time * 2) * 0.3;
-                    // Radio pequeño para círculos cerrados
-                    gokuKintoun.position.x = -4 + Math.sin(-time) * 2.5;
-                    gokuKintoun.position.z = -4 + Math.cos(-time) * 2.5;
-                    gokuKintoun.rotation.y = -Math.PI / 4 - time;
-                    requestAnimationFrame(flyAnim);
-                }
-            };
-            flyAnim();
+            // Registrar animación centralizada
+            animatedModels.push({
+                type: 'circular',
+                object: gokuKintoun,
+                baseX: -4,
+                baseZ: -4,
+                baseY: 5.5,
+                radius: 2.5,
+                speed: 1,
+                yOffset: 0.3
+            });
         },
         (xhr) => {
             const percent = (xhr.loaded / xhr.total * 100).toFixed(0);
@@ -838,8 +864,8 @@ function createYamcha() {
             const size = box.getSize(new THREE.Vector3());
             const maxDim = Math.max(size.x, size.y, size.z);
 
-            // Tamaño normal de 0.4 para que no rompa la pantalla
-            const targetScale = (maxDim > 0) ? (0.4 / maxDim) : 0.08;
+            // Tamaño mucho más pequeño a petición (0.1 en lugar de 0.4)
+            const targetScale = (maxDim > 0) ? (0.1 / maxDim) : 0.02;
             yamcha.scale.setScalar(targetScale);
 
             // Orientación firme hacia el centro
@@ -891,21 +917,16 @@ function createTerodactilo() {
             scene.add(terodactilo);
             console.log('🦖 Terodáctilo agregado. Tamaño:', size, 'Escala:', targetScale);
 
-            // Animación: solo movimiento vertical (flotando)
-            let time = 0;
-            const floatAnim = () => {
-                time += 0.015;
-                if (terodactilo) {
-                    // Flotando suavemente arriba y abajo sobre su posición base
-                    terodactilo.position.y = 5 + Math.sin(time) * 0.4;
-
-                    // Pequeña inclinación lateral aleatoria/suave
-                    terodactilo.rotation.z = Math.sin(time * 0.5) * 0.1;
-
-                    requestAnimationFrame(floatAnim);
-                }
-            };
-            floatAnim();
+            // Registrar animación centralizada
+            animatedModels.push({
+                type: 'float',
+                object: terodactilo,
+                baseY: 5,
+                amplitude: 0.4,
+                speed: 1,
+                lateralAmplitude: 0.1,
+                lateralSpeed: 0.5
+            });
         },
         (xhr) => {
             const percent = (xhr.loaded / xhr.total * 100).toFixed(0);
@@ -953,16 +974,14 @@ function createNamekSpaceship() {
             scene.add(namekSpaceship);
             console.log('🛸 Nave de Namek agregada en:', shipX, h, shipZ, '| Escala:', targetScale);
 
-            // Efecto flotante muy sutil (estacionada)
-            let time = 0;
-            const idleAnim = () => {
-                time += 0.01;
-                if (namekSpaceship) {
-                    namekSpaceship.position.y = (h + 0.1) + Math.sin(time) * 0.1;
-                    requestAnimationFrame(idleAnim);
-                }
-            };
-            idleAnim();
+            // Registrar animación centralizada
+            animatedModels.push({
+                type: 'float',
+                object: namekSpaceship,
+                baseY: h + 0.1,
+                amplitude: 0.1,
+                speed: 1
+            });
         },
         (xhr) => {
             const percent = (xhr.loaded / xhr.total * 100).toFixed(0);
@@ -1002,24 +1021,15 @@ function createGregory() {
 
             scene.add(gregory);
 
-            // Animación: Gregory correteando por el planeta
-            let time = 0;
-            const runAnim = () => {
-                time += 0.02;
-                if (gregory && planetKaioh) {
-                    // Moverse en círculos sobre el planeta
-                    const orbitRadius = 0.8;
-                    gregory.position.x = planetKaioh.position.x + Math.sin(time) * orbitRadius;
-                    gregory.position.z = planetKaioh.position.z + Math.cos(time) * orbitRadius;
-                    gregory.position.y = planetKaioh.position.y + 0.8; // Sobre el planeta
-
-                    gregory.rotation.y = -time + Math.PI; // Corriendo hacia adelante
-                    requestAnimationFrame(runAnim);
-                } else {
-                    requestAnimationFrame(runAnim);
-                }
-            };
-            runAnim();
+            // Registrar animación centralizada
+            animatedModels.push({
+                type: 'orbit',
+                object: gregory,
+                planetRef: 'planetKaioh',
+                orbitRadius: 0.8,
+                speed: 2,
+                yOffset: 0.8
+            });
         },
         (xhr) => {
             const percent = (xhr.loaded / xhr.total * 100).toFixed(0);
@@ -1076,18 +1086,16 @@ function createArale() {
             arale.rotation.y = -Math.PI / 4;
 
             scene.add(arale);
-            console.log('🌸 Arale agregada en:', bestPos.x, bestHeight, bestPos.z, '| Escala:', targetScale);
+            console.log('🌸 Arale agregada en:', shipX, h, shipZ, '| Escala:', targetScale);
 
-            // Animación: Arale saltando de alegría ("N'cha!")
-            let time = 0;
-            const jumpAnim = () => {
-                time += 0.05;
-                if (arale) {
-                    arale.position.y = (h + 0.1) + Math.abs(Math.sin(time)) * 0.3;
-                    requestAnimationFrame(jumpAnim);
-                }
-            };
-            jumpAnim();
+            // Registrar animación centralizada
+            animatedModels.push({
+                type: 'jump',
+                object: arale,
+                baseY: h + 0.1,
+                amplitude: 0.3,
+                speed: 5
+            });
         },
         (xhr) => {
             const percent = (xhr.loaded / xhr.total * 100).toFixed(0);
@@ -1218,12 +1226,12 @@ let masterRoshi = null;
 
 function createMasterRoshi() {
     const loader = new GLTFLoader();
-    console.log('👴 Cargando Maestro Roshi desde: assets/master_roshi.glb');
+    console.log('👴 Cargando Maestro Muten Roshi desde: assets/maestro_muten__master_roshi.glb');
 
     loader.load(
-        'https://media.githubusercontent.com/media/Felipe-Flores-creator/Port_Folio/main/assets/master_roshi.glb',
+        'https://media.githubusercontent.com/media/Felipe-Flores-creator/Port_Folio/main/assets/maestro_muten__master_roshi.glb',
         (gltf) => {
-            console.log('👴 Maestro Roshi cargado exitosamente!', gltf);
+            console.log('👴 Maestro Muten Roshi cargado exitosamente!', gltf);
             masterRoshi = gltf.scene;
 
             // Posicionar delante de la Kame House (que está en 5, -0.3, 5)
@@ -1240,14 +1248,14 @@ function createMasterRoshi() {
             masterRoshi.rotation.y = Math.PI;
 
             scene.add(masterRoshi);
-            console.log('👴 Maestro Roshi agregado en la Kame House. Escala:', targetScale);
+            console.log('👴 Maestro Muten Roshi agregado en la Kame House. Escala:', targetScale);
         },
         (xhr) => {
             const percent = (xhr.loaded / xhr.total * 100).toFixed(0);
-            console.log('👴 Cargando Maestro Roshi: ' + percent + '%');
+            console.log('👴 Cargando Maestro Muten Roshi: ' + percent + '%');
         },
         (error) => {
-            console.error('❌ Error cargando Maestro Roshi:', error);
+            console.error('❌ Error cargando Maestro Muten Roshi:', error);
         }
     );
 }
@@ -1350,8 +1358,8 @@ function createDragonBalls() {
         const terrainHeight = getTerrainHeight(data.position.x, data.position.z);
         group.position.set(data.position.x, Math.max(data.position.y, terrainHeight + 1.5), data.position.z);
 
-        // Esfera principal naranja brillante
-        const sphereGeometry = new THREE.SphereGeometry(0.25, 32, 32);
+        // Esfera principal naranja brillante (reducido a 24 segmentos para optimizar)
+        const sphereGeometry = new THREE.SphereGeometry(0.25, 24, 24);
         const sphereMaterial = new THREE.MeshStandardMaterial({
             color: 0xcc5500,
             emissive: 0x993300,
@@ -1360,11 +1368,10 @@ function createDragonBalls() {
             roughness: 0.2
         });
         const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
-        sphere.castShadow = true;
         group.add(sphere);
 
-        // Brillo interno (núcleo dorado)
-        const coreGeometry = new THREE.SphereGeometry(0.15, 16, 16);
+        // Brillo interno (núcleo dorado) - reducido a 12 segmentos
+        const coreGeometry = new THREE.SphereGeometry(0.15, 12, 12);
         const coreMaterial = new THREE.MeshStandardMaterial({
             color: 0xffd700,
             emissive: 0xffd700,
@@ -1403,8 +1410,8 @@ function createDragonBalls() {
             group.add(star);
         });
 
-        // Aura/brillo exterior
-        const auraGeometry = new THREE.SphereGeometry(0.4, 16, 16);
+        // Aura/brillo exterior - reducido a 12 segmentos
+        const auraGeometry = new THREE.SphereGeometry(0.4, 12, 12);
         const auraMaterial = new THREE.MeshBasicMaterial({
             color: 0xff8800,
             transparent: true,
@@ -1414,9 +1421,9 @@ function createDragonBalls() {
         const aura = new THREE.Mesh(auraGeometry, auraMaterial);
         group.add(aura);
 
-        // Partículas orbitando
+        // Partículas orbitando (reducido a 6 partículas)
         const particlesGroup = new THREE.Group();
-        for (let i = 0; i < 8; i++) {
+        for (let i = 0; i < 6; i++) {
             const particleGeometry = new THREE.SphereGeometry(0.02, 4, 4);
             const particleMaterial = new THREE.MeshBasicMaterial({
                 color: 0xffd700,
@@ -1424,7 +1431,7 @@ function createDragonBalls() {
                 opacity: 0.8
             });
             const particle = new THREE.Mesh(particleGeometry, particleMaterial);
-            const angle = (i / 8) * Math.PI * 2;
+            const angle = (i / 6) * Math.PI * 2;
             particle.position.set(Math.cos(angle) * 0.45, 0, Math.sin(angle) * 0.45);
             particlesGroup.add(particle);
         }
@@ -1548,11 +1555,11 @@ function celebrateBall(ball) {
     let rotation = 0;
 
     const animateDiscovery = () => {
-        jumpHeight += 0.04;
-        rotation += 0.25;
+        jumpHeight += 0.02; // Más suave (antes 0.04)
+        rotation += 0.1; // Rotación más lenta (antes 0.25)
         ball.position.y = startY + jumpHeight;
         ball.rotation.y = rotation;
-        if (jumpHeight < 0.8) {
+        if (jumpHeight < 0.5) { // Menos altura (antes 0.8)
             requestAnimationFrame(animateDiscovery);
         } else {
             animateSettle();
@@ -1560,8 +1567,8 @@ function celebrateBall(ball) {
     };
 
     const animateSettle = () => {
-        jumpHeight -= 0.04;
-        rotation += 0.25;
+        jumpHeight -= 0.02; // Más suave (antes 0.04)
+        rotation += 0.1; // Rotación más lenta (antes 0.25)
         ball.position.y = startY + jumpHeight;
         ball.rotation.y = rotation;
         if (jumpHeight > 0) {
@@ -1627,31 +1634,34 @@ function updateCounter() {
 
 function unifyLightSequence() {
     const targetPos = new THREE.Vector3(0, 5, 0);
+
     markers.forEach((ball, i) => {
         const startPos = ball.position.clone();
-        let alpha = 0;
-        const moveAnim = () => {
-            alpha += 0.01;
-            ball.position.lerpVectors(startPos, targetPos, alpha);
-            ball.userData.sphere.material.emissiveIntensity = 2 + alpha * 10;
-            if (alpha < 1) requestAnimationFrame(moveAnim);
-            else if (i === 0) triggerShenlongEffect();
+
+        // Registrar cada animación de movimiento en el sistema centralizado
+        const moveAnim = {
+            type: 'shenlongConverge',
+            object: ball,
+            startPos: startPos,
+            targetPos: targetPos,
+            progress: 0,
+            index: i,
+            isLast: (i === markers.length - 1)
         };
-        moveAnim();
+        animatedModels.push(moveAnim);
     });
 }
 
 
 function triggerShenlongEffect() {
     console.log('🐉 Iniciando efecto Shenlong...');
-    console.log('🐉 GLTFLoader disponible:', typeof GLTFLoader !== 'undefined');
 
     // Ocultar las esferas cuando se transforman
     markers.forEach(ball => {
         ball.visible = false;
     });
 
-    // Efecto de partículas de energía (mostrar inmediatamente)
+    // Efecto de partículas de energía
     const explosionGeo = new THREE.BufferGeometry();
     const particles = [];
     for (let i = 0; i < 500; i++) {
@@ -1668,30 +1678,29 @@ function triggerShenlongEffect() {
     const points = new THREE.Points(explosionGeo, explosionMat);
     scene.add(points);
 
-    let expandScale = 1;
-    const anim = () => {
-        expandScale += 0.5;
-        points.scale.setScalar(expandScale);
-        points.material.opacity -= 0.02;
-        if (points.material.opacity > 0) {
-            requestAnimationFrame(anim);
-        } else {
-            scene.remove(points);
-        }
+    // Registrar animación de partículas en el sistema centralizado
+    const particleAnim = {
+        type: 'shenlongParticles',
+        object: points,
+        expandScale: 1,
+        startTime: Date.now(),
+        duration: 2000 // 2 segundos
     };
-    anim();
+    animatedModels.push(particleAnim);
 
-    // Cambiar ambiente a oscuro/místico
+    // Cambiar ambiente a oscuro/místico (sin error de fog)
+    if (!scene.fog) {
+        scene.fog = new THREE.FogExp2(0x1a3a16, 0.03);
+    }
     scene.fog.color.setHex(0x1a3a16);
     renderer.setClearColor(0x1a3a16);
     scene.background.setHex(0x1a3a16);
 
-    // Crear Shenlong (modelo 3D o fallback)
+    // Crear Shenlong
     function createShenlong(isFallback = false) {
         let shenlong;
 
         if (isFallback) {
-            // Fallback: crear dragón básico con primitivas
             console.log('🐉 Creando Shenlong fallback (geometría básica)');
             shenlong = new THREE.Group();
 
@@ -1748,56 +1757,54 @@ function triggerShenlongEffect() {
             shenlong.add(rightHorn);
 
         } else {
-            // Usar modelo GLB
             shenlong = window.shenlongModel;
         }
 
-        shenlong.position.set(0, 2, 3);  // Más abajo y más cerca de la cámara
-        shenlong.rotation.y = Math.PI;  // Que mire de frente hacia la pantalla
+        shenlong.position.set(0, 5, 8);
+        shenlong.rotation.y = Math.PI;
         shenlong.name = 'Shenlong';
 
-        // Calcular escala apropiada
         const box = new THREE.Box3().setFromObject(shenlong);
         const size = box.getSize(new THREE.Vector3());
         const maxDim = Math.max(size.x, size.y, size.z);
-        const targetScale = 10 / maxDim;  // Más grande pero no excesivo
+        const targetScale = 3 / maxDim;
 
-        // Agregar luz puntual para iluminar el dragón
-        const dragonLight = new THREE.PointLight(0x00ff88, 2, 20);
-        dragonLight.position.set(0, 6, 0);
+        // Luz puntual para el dragón
+        const dragonLight = new THREE.PointLight(0x00ff88, 2, 25);
+        dragonLight.position.set(0, 6, 5);
         dragonLight.name = 'DragonLight';
         scene.add(dragonLight);
 
         scene.add(shenlong);
-        console.log('🐉 Shenlong agregado a la escena. Tamaño:', size, 'Escala:', targetScale);
+        console.log('🐉 Shenlong agregado. Tamaño:', size, 'Escala:', targetScale);
 
-        // Animación de aparición escalando desde 0
+        // Animación de aparición (sin requestAnimationFrame individual problemático)
+        shenlong.visible = false;
         shenlong.scale.setScalar(0.01);
 
-        let scale = 0.01;
-        const appearAnim = () => {
-            scale += 0.01;
-            shenlong.scale.setScalar(scale);
-            if (scale < targetScale) {
-                requestAnimationFrame(appearAnim);
-            } else {
+        // Registrar animación centralizada
+        let appearProgress = 0;
+        const appearAnim = {
+            type: 'shenlongAppear',
+            object: shenlong,
+            targetScale: targetScale,
+            progress: 0,
+            onComplete: () => {
+                shenlong.visible = true;
                 console.log('🐉 Shenlong apareció completamente!');
-                // Mostrar modal después de que aparezca
-                setTimeout(showShenlongModal, 1000);
+                setTimeout(showShenlongModal, 800);
             }
         };
-        appearAnim();
+        animatedModels.push(appearAnim);
     }
 
     // Intentar cargar modelo GLB
     if (typeof GLTFLoader !== 'undefined') {
         const loader = new GLTFLoader();
-        console.log('🐉 Cargando modelo desde: assets/dragon_ball_z_shenlong.glb');
-
         loader.load(
             'https://media.githubusercontent.com/media/Felipe-Flores-creator/Port_Folio/main/assets/dragon_ball_z_shenlong.glb',
             (gltf) => {
-                console.log('🐉 Modelo cargado exitosamente!', gltf);
+                console.log('🐉 Modelo cargado!', gltf);
                 window.shenlongModel = gltf.scene;
                 createShenlong(false);
             },
@@ -1807,12 +1814,11 @@ function triggerShenlongEffect() {
             },
             (error) => {
                 console.error('❌ Error cargando Shenlong:', error);
-                console.log('🐉 Usando fallback geométrico');
                 createShenlong(true);
             }
         );
     } else {
-        console.error('❌ GLTFLoader no está disponible');
+        console.error('❌ GLTFLoader no disponible');
         createShenlong(true);
     }
 }
@@ -1933,22 +1939,46 @@ initMusicControl();
 // =============================================
 // ANIMACIÓN
 // =============================================
-function animate() {
+// Throttle del loop: renderizar máximo a 30 FPS para ahorrar GPU
+const _FPS_LIMIT = 30;
+const _MS_PER_FRAME = 1000 / _FPS_LIMIT;
+let _lastFrameTime = 0;
+let _globalAnimTime = 0;
+
+function animate(timestamp) {
+    if (!timestamp) {
+        requestAnimationFrame(animate);
+        return;
+    }
+
     requestAnimationFrame(animate);
+
+    // Si el contexto WebGL se perdió, no renderizar
+    if (isWebGLContextLost) return;
+
+    // Inicializar en el primer frame
+    if (!_lastFrameTime) {
+        _lastFrameTime = timestamp;
+        return;
+    }
+
+    const elapsed = timestamp - _lastFrameTime;
+    if (elapsed < _MS_PER_FRAME) return;
+    _lastFrameTime = timestamp;
+    _globalAnimTime += elapsed * 0.001; // Tiempo global en segundos
 
     // Animación de cámara de introducción
     if (cameraIntroAnimation.active) {
-        cameraIntroAnimation.progress += 0.016 / cameraIntroAnimation.duration; // Asumiendo ~60fps
+        const delta = elapsed * 0.001;
+        cameraIntroAnimation.progress += delta / cameraIntroAnimation.duration;
 
         if (cameraIntroAnimation.progress >= 1.0) {
             cameraIntroAnimation.progress = 1.0;
             cameraIntroAnimation.active = false;
             camera.position.copy(cameraIntroAnimation.endPos);
         } else {
-            // Interpolación suave (easing cúbico)
             const t = cameraIntroAnimation.progress;
             const ease = t * t * (3 - 2 * t);
-
             camera.position.lerpVectors(
                 cameraIntroAnimation.startPos,
                 cameraIntroAnimation.endPos,
@@ -1961,19 +1991,107 @@ function animate() {
 
     const time = Date.now() * 0.001;
 
+    // Animaciones de modelos centralizados (suavizadas)
+    animatedModels.forEach(anim => {
+        if (!anim.object) return;
+
+        switch (anim.type) {
+            case 'rotation':
+                anim.object.rotation.y += anim.speed * 0.5;
+                break;
+
+            case 'circular':
+                anim.object.position.x = anim.baseX + Math.sin(-_globalAnimTime * anim.speed * 0.5) * anim.radius;
+                anim.object.position.z = anim.baseZ + Math.cos(-_globalAnimTime * anim.speed * 0.5) * anim.radius;
+                anim.object.position.y = anim.baseY + Math.sin(_globalAnimTime * 0.8) * anim.yOffset;
+                anim.object.rotation.y = -Math.PI / 4 - _globalAnimTime * anim.speed * 0.5;
+                break;
+
+            case 'float':
+                anim.object.position.y = anim.baseY + Math.sin(_globalAnimTime * anim.speed * 0.5) * anim.amplitude;
+                if (anim.lateralAmplitude) {
+                    anim.object.rotation.z = Math.sin(_globalAnimTime * anim.lateralSpeed * 0.5) * anim.lateralAmplitude;
+                }
+                break;
+
+            case 'orbit':
+                if (anim.planetRef === 'planetKaioh' && planetKaioh) {
+                    anim.object.position.x = planetKaioh.position.x + Math.sin(_globalAnimTime * anim.speed * 0.5) * anim.orbitRadius;
+                    anim.object.position.z = planetKaioh.position.z + Math.cos(_globalAnimTime * anim.speed * 0.5) * anim.orbitRadius;
+                    anim.object.position.y = planetKaioh.position.y + anim.yOffset;
+                    anim.object.rotation.y = -_globalAnimTime * anim.speed * 0.5 + Math.PI;
+                }
+                break;
+
+            case 'jump':
+                anim.object.position.y = anim.baseY + Math.abs(Math.sin(_globalAnimTime * anim.speed * 0.5)) * anim.amplitude;
+                break;
+
+            case 'shenlongAppear':
+                anim.progress += 0.015 * 2; // Velocidad de aparición
+                if (anim.progress >= 1.0) {
+                    anim.progress = 1.0;
+                    anim.object.visible = true;
+                    anim.object.scale.setScalar(anim.targetScale);
+                    if (anim.onComplete && !anim.completed) {
+                        anim.completed = true;
+                        anim.onComplete();
+                        // Remover del array después de completar
+                        const idx = animatedModels.indexOf(anim);
+                        if (idx > -1) animatedModels.splice(idx, 1);
+                    }
+                } else {
+                    const scale = THREE.MathUtils.lerp(0.01, anim.targetScale, anim.progress);
+                    anim.object.scale.setScalar(scale);
+                }
+                break;
+
+            case 'shenlongParticles':
+                const elapsedParticle = Date.now() - anim.startTime;
+                const particleProgress = Math.min(elapsedParticle / anim.duration, 1);
+                anim.expandScale = 1 + particleProgress * 15;
+                anim.object.scale.setScalar(anim.expandScale);
+                anim.object.material.opacity = Math.max(0, 1 - particleProgress * 1.5);
+                if (particleProgress >= 1) {
+                    scene.remove(anim.object);
+                    const idx2 = animatedModels.indexOf(anim);
+                    if (idx2 > -1) animatedModels.splice(idx2, 1);
+                }
+                break;
+
+            case 'shenlongConverge':
+                anim.progress += 0.012 * 2;
+                if (anim.progress >= 1.0) {
+                    anim.progress = 1.0;
+                    anim.object.position.copy(anim.targetPos);
+                    anim.object.userData.sphere.material.emissiveIntensity = 12;
+                    if (anim.isLast) {
+                        triggerShenlongEffect();
+                    }
+                    const idx3 = animatedModels.indexOf(anim);
+                    if (idx3 > -1) animatedModels.splice(idx3, 1);
+                } else {
+                    anim.object.position.lerpVectors(anim.startPos, anim.targetPos, anim.progress);
+                    anim.object.userData.sphere.material.emissiveIntensity = 2 + anim.progress * 10;
+                }
+                break;
+        }
+    });
+
+    // Animación de esferas del dragón (suavizada)
     markers.forEach((ball, index) => {
-        ball.position.y = ball.userData.originalY + Math.sin(time + index) * 0.1;
-        ball.rotation.y = time * 0.3 + index;
+        ball.position.y = ball.userData.originalY + Math.sin(time * 0.5 + index * 0.5) * 0.08;
+        ball.rotation.y = time * 0.15 + index;
 
         if (ball.userData.particles) {
-            ball.userData.particles.rotation.y = time * 0.8;
-            ball.userData.particles.rotation.x = time * 0.3;
+            ball.userData.particles.rotation.y = time * 0.3;
+            ball.userData.particles.rotation.x = time * 0.15;
         }
 
         if (!ball.userData.discovered) {
-            const pulse = 0.6 + Math.sin(time * 3 + index) * 0.3;
+            const pulse = 0.6 + Math.sin(time * 1.5 + index) * 0.2;
             ball.userData.sphere.material.emissiveIntensity = pulse;
-            ball.userData.aura.material.opacity = 0.1 + Math.sin(time * 2) * 0.05;
+            ball.userData.aura.material.opacity = 0.1 + Math.sin(time * 1) * 0.03;
         } else {
             ball.userData.aura.material.opacity = 0.2;
         }
