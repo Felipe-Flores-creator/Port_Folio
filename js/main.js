@@ -4,6 +4,7 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { Water } from 'three/addons/objects/Water.js';
 
 // Ya no mutamos THREE ya que es un módulo de solo lectura.
 
@@ -27,7 +28,7 @@ const PORTFOLIO_DATA = [
         starCount: 2,
         title: 'EXPERIENCIA',
         position: { x: 3, y: 3, z: -2 },
-        content: `<div class="timeline"><div class="timeline-item"><h4>Desarrollo de herramientas GIS personalizadas para correción de flujo de trabajo</h4><div class="date">2022 - Presente</div><p>Participación en grupo de investigación multiamenazas de la Universidad de Concepción.</p></div><div class="timeline-item"><h4>Full-Stack Developer</h4><div class="date">2020 - 2022</div><p>Desarrollo de aplicaciones web con React y Node.js.</p></div><div class="timeline-item"><h4>Frontend Developer</h4><div class="date">2018 - 2020</div><p>Curso de más de 300 horas en javasript y lógica de Software.</p></div></div>`,
+        content: `<div class="timeline"><div class="timeline-item"><h4>Desarrollo de herramientas GIS personalizadas para correción de flujo de trabajo</h4><div class="date">2022 - Presente</div><p>Participación en grupo de investigación multiamenazas de la Universidad de Concepción.</p></div><div class="timeline-item"><h4>Procesamientod de imagenes satelitales</h4><div class="date">2025</div><p>Desarrollo de aplicaciones web con React y Node.js.</p></div><div class="timeline-item"><h4>Frontend Developer</h4><div class="date">2018 - 2020</div><p>Elaboración de proyectos propios con React y angular</p></div></div>`,
         hint: '✨ Más de 6 años transformando ideas en código.'
     },
     {
@@ -36,8 +37,7 @@ const PORTFOLIO_DATA = [
         starCount: 3,
         title: 'HABILIDADES',
         position: { x: -3, y: 2.5, z: 2 },
-        content: `<p>Mi arsenal tecnológico:</p><div class="skills-grid"><div class="skill-tag">⚛️ React</div><div class="skill-tag">🌐 Next.js</div><div class="skill-tag">🟢 Node.js</div><div class="skill-tag">📘 TypeScript</div><div class="skill-tag">🐍 Python</div><div class="skill-tag">🎨 Three.js</div><div class="skill-tag">🐳 Docker</div><div class="skill-tag">☸️ Kubernetes</div><div class="skill-tag"> Angular</div><div class="skill-tag">🗄️ GraphQL</div><div class="skill-tag">🎨 Figma</div><div class="skill-tag"> :octocat: GitHub </div><div class="skill-tag"> 🐚 Bash</div></div><div class="panel-hint" style="margin-top:20px;"><span>`,
-
+        content: `<p>Mi arsenal tecnológico:</p><div class="skills-grid"><div class="skill-tag">⚛️ React</div><div class="skill-tag">🌐 Next.js</div><div class="skill-tag">🟢 Node.js</div><div class="skill-tag">📘 TypeScript</div><div class="skill-tag">🐍 Python</div><div class="skill-tag">🎨 Three.js</div><div class="skill-tag">🐳 Docker</div><div class="skill-tag">Multi agent IA</div><div class="skill-tag"> Angular</div><div class="skill-tag">🗄️ GraphQL</div><div class="skill-tag"> Machine learning</div><div class="skill-tag"> :octocat: GitHub </div><div class="skill-tag"> 🐚 Bash</div></div><div class="panel-hint" style="margin-top:20px;"><span>`,
         hint: '🚀 Siempre aprendiendo nuevas tecnologías e inovación.'
     },
     {
@@ -46,7 +46,7 @@ const PORTFOLIO_DATA = [
         starCount: 4,
         title: 'PROYECTOS',
         position: { x: 2, y: 2, z: 3 },
-        content: `<div class="project-card"><h4>Desarrollo de herramienta con python, para la corrección de flujos de trabajo en equipo de Arauco</h4><p>Desarrollo de herramienta para la clasificación de la región de Ñuble según su captación de agua, con datos opensource</p></div><div class="project-card"><h4>Plataforma React para visualización de variables espaciales</h4><p>Cálculo de parámetros como costos de bencina con React</p></div><div class="project-card"><h4>🤖 Chatbot IA</h4><p>Asistente virtual con procesamiento de lenguaje natural y machine learning.</p></div>`,
+        content: `<div class="project-card"><h4>Desarrollo de herramienta con python, para la corrección de flujos de trabajo en equipo de Arauco</h4><p>Desarrollo de herramienta para la clasificación de la región de Ñuble según su captación de agua, con datos opensource</p></div><div class="project-card"><h4>Plataforma React para visualización de variables espaciales</h4><p>Cálculo de parámetros como costos de bencina por trayecto</p></div><div class="project-card"><h4>🤖 Chatbot IA</h4><p>Asistente virtual con procesamiento de lenguaje natural y machine learning.</p></div>`,
         hint: '💻 Cada proyecto es una nueva aventura.'
     },
     {
@@ -64,7 +64,7 @@ const PORTFOLIO_DATA = [
         starCount: 6,
         title: 'EDUCACIÓN',
         position: { x: 4, y: 2.5, z: 1 },
-        content: `<div class="timeline"><div class="timeline-item"><h4>Geógrafo</h4><div class="date">2028 - 2024</div><p>Universidad de Concepción</p></div><div class="timeline-item"><h4>Curso programación con IA</h4><div class="date">2021</div><p>Especialización en Machine Learning y Deep Learning con python</p></div><div class="timeline-item"><h4>Certificación Data Science</h4><div class="date">2022</div><p>Certificado en Computer vision y procesamiento de imágenes con python</p></div><div class="timeline-item"><h4>Certificación Bootcamp JavaScript</h4><div class="date">2026</div><p>Desarrollo Full-Stack moderno</p></div></div>`,
+        content: `<div class="timeline"><div class="timeline-item"><h4>Geógrafo</h4><div class="date">2017 - 2024</div><p>Universidad de Concepción</p></div><div class="timeline-item"><h4>Curso programación con IA</h4><div class="date">2021</div><p>Especialización en Machine Learning y Deep Learning con python</p></div><div class="timeline-item"><h4>Certificación Data Science</h4><div class="date">2022</div><p>Certificado en Computer vision y procesamiento de imágenes con python</p></div><div class="timeline-item"><h4>Certificación Bootcamp JavaScript</h4><div class="date">2026</div><p>Desarrollo Full-Stack moderno</p></div></div>`,
         hint: '📚 El aprendizaje nunca termina.'
     },
     {
@@ -88,6 +88,7 @@ let raycaster, mouse;
 let hoveredBall = null;
 let isPanelOpen = false;
 let terrain;
+let water;
 let isWebGLContextLost = false;
 
 // Registro de animaciones de modelos (centralizado)
@@ -345,10 +346,12 @@ function createTerrain() {
 
     const vertices = geometry.attributes.position.array;
     const colors = [];
-    const colorSoil = new THREE.Color('#3d2b1f'); // Tierra base
-    const colorGrass = new THREE.Color('#d2b48c'); // Café muy claro
-    const colorMoss = new THREE.Color('#1a3a16'); // Verde bosque profundo
-    const colorWater = new THREE.Color('#215e7d'); // Agua más natural
+
+    // Paleta de colores más clara y vibrante (Estilo DBZ / Akihabara)
+    const colorSand = new THREE.Color('#e2c4a1');  // Arena clara
+    const colorGrass = new THREE.Color('#c5d9a5'); // Verde suave/pasto
+    const colorMountain = new THREE.Color('#7caf7b'); // Montaña suave
+    const colorWaterBase = new THREE.Color('#1e4f6e'); // Base para transición
 
     for (let i = 0; i < vertices.length; i += 3) {
         const x = vertices[i];
@@ -356,19 +359,27 @@ function createTerrain() {
         const height = getTerrainHeight(x, z);
         vertices[i + 1] = height;
 
-        let color;
+        let finalColor = new THREE.Color();
+
+        // Transición suave usando LERP (Interpolación Lineal)
         if (height < 0) {
-            color = colorWater;
-        } else if (height < 0.2) {
-            color = colorSoil;
-        } else if (height < 1.5) {
-            color = colorGrass;
+            finalColor.copy(colorWaterBase);
+        } else if (height < 0.4) {
+            // Transición Arena -> Pasto
+            const ratio = height / 0.4;
+            finalColor.copy(colorSand).lerp(colorGrass, ratio);
+        } else if (height < 2.5) {
+            // Transición Pasto -> Montaña
+            const ratio = (height - 0.4) / (2.5 - 0.4);
+            finalColor.copy(colorGrass).lerp(colorMountain, ratio);
         } else {
-            color = colorMoss;
+            // Pico de montaña
+            finalColor.copy(colorMountain);
         }
 
-        const variation = 0.9 + Math.random() * 0.2;
-        colors.push(color.r * variation, color.g * variation, color.b * variation);
+        // Variación aleatoria sutil para mayor realismo (texturizado procedimental)
+        const darkVariation = 0.95 + Math.random() * 0.1;
+        colors.push(finalColor.r * darkVariation, finalColor.g * darkVariation, finalColor.b * darkVariation);
     }
 
     geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
@@ -376,8 +387,8 @@ function createTerrain() {
 
     const material = new THREE.MeshStandardMaterial({
         vertexColors: true,
-        roughness: 0.8,
-        metalness: 0.1
+        roughness: 0.85,
+        metalness: 0.05
     });
 
     terrain = new THREE.Mesh(geometry, material);
@@ -390,17 +401,24 @@ function createTerrain() {
 // CREACIÓN DEL AGUA
 // =============================================
 function createWater() {
-    const geometry = new THREE.PlaneGeometry(16, 16);
-    geometry.rotateX(-Math.PI / 2);
+    const waterGeometry = new THREE.PlaneGeometry(20, 20);
+    waterGeometry.rotateX(-Math.PI / 2);
 
-    const material = new THREE.MeshLambertMaterial({
-        color: 0x4db2ff,
+    const waterMaterial = new THREE.MeshStandardMaterial({
+        color: 0xbbeeff,
         transparent: true,
-        opacity: 0.5
+        opacity: 0.35, // Aún más transparente para asegurar visibilidad
+        roughness: 0.1,
+        metalness: 0.1,
+        normalMap: new THREE.TextureLoader().load('https://raw.githubusercontent.com/mrdoob/three.js/master/examples/textures/waternormals.jpg', function (texture) {
+            texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+            texture.repeat.set(4, 4);
+        })
     });
 
-    const water = new THREE.Mesh(geometry, material);
-    water.position.y = -0.2;
+    water = new THREE.Mesh(waterGeometry, waterMaterial);
+    water.position.y = -0.25;
+
     scene.add(water);
 }
 
@@ -2096,6 +2114,11 @@ function animate(timestamp) {
             ball.userData.aura.material.opacity = 0.2;
         }
     });
+
+    // El movimiento del agua ha sido desactivado a petición del usuario.
+    // if (water) {
+    //     water.material.uniforms['time'].value += 1.0 / 60.0;
+    // }
 
     renderer.render(scene, camera);
 }
