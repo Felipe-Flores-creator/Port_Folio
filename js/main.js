@@ -18,9 +18,9 @@ const PORTFOLIO_DATA = [
         starCount: 1,
         title: 'INICIO',
         position: { x: 0, y: 2, z: 0 },
-        content: `<div style="text-align:center; margin-bottom:15px;"><img src="https://cdni.iconscout.com/illustration/premium/thumb/web-development-3454628-2918517.png" style="width:100%; border-radius:12px; margin-bottom:15px;"></div><p>¡Bienvenido a mi universo digital! Soy <strong style="color:var(--primary);">Felipe_Dev</strong>, un desarrollador apasionado por crear experiencias web únicas.</p><p>Este terreno 3D representa mi trayectoria profesional. Cada esfera del dragón contiene un secreto sobre mi carrera.</p><p>Reúne las 7 esferas para descubrir todo mi potencial como desarrollador.</p><p style="font-size:0.8rem; color:var(--text-second); margin-top:20px;"><em>Nota: Las ilustraciones de este proyecto pueden ser obtenidas de repositorios como <a href="https://storyset.com/" target="_blank" style="color:var(--accent);">Storyset</a> o <a href="https://undraw.co/" target="_blank" style="color:var(--accent);">unDraw</a>.</em></p>`,
+        content: `<div style="text-align:center; margin-bottom:15px;"><img src="https://cdni.iconscout.com/illustration/premium/thumb/web-development-3454628-2918517.png" style="width:100%; border-radius:12px; margin-bottom:15px;"></div><p>¡Bienvenido a mi universo digital! Soy <strong style="color:var(--accent);">Felipe_Dev</strong>, un desarrollador apasionado por crear experiencias web únicas.</p><p>Este terreno 3D representa mi trayectoria profesional. Cada esfera del dragón contiene un secreto sobre mi carrera.</p><p>Reúne las 7 esferas para descubrir todo mi potencial como desarrollador.</p><p style="font-size:0.8rem; color:var(--text-second); margin-top:20px;"><em>Nota: Las ilustraciones de este proyecto pueden ser obtenidas de repositorios como <a href="https://storyset.com/" target="_blank" style="color:var(--accent);">Storyset</a> o <a href="https://undraw.co/" target="_blank" style="color:var(--accent);">unDraw</a>.</em></p>`,
 
-        hint: '💡 Consejo: Explora el terreno y encontra todas las esferas del Dragón.'
+        hint: '💡 Consejo: Explora el terreno y encuentra todas las esferas del Dragón.'
     },
     {
         id: 'experiencia',
@@ -28,7 +28,7 @@ const PORTFOLIO_DATA = [
         starCount: 2,
         title: 'EXPERIENCIA',
         position: { x: 3, y: 3, z: -2 },
-        content: `<div class="timeline"><div class="timeline-item"><h4>Desarrollo de herramientas GIS personalizadas para correción de flujo de trabajo</h4><div class="date">2022 - Presente</div><p>Participación en grupo de investigación multiamenazas de la Universidad de Concepción.</p></div><div class="timeline-item"><h4>Procesamientod de imagenes satelitales</h4><div class="date">2025</div><p>Desarrollo de aplicaciones web con React y Node.js.</p></div><div class="timeline-item"><h4>Frontend Developer</h4><div class="date">2018 - 2020</div><p>Elaboración de proyectos propios con React y angular</p></div></div>`,
+        content: `<div class="timeline"><div class="timeline-item"><h4>Desarrollo de herramientas GIS personalizadas para corrección de flujo de trabajo</h4><div class="date">2022 - Presente</div><p>Participación en grupo de investigación multiamenazas de la Universidad de Concepción.</p></div><div class="timeline-item"><h4>Procesamiento de imágenes satelitales</h4><div class="date">2025</div><p>Desarrollo de aplicaciones web con React y Node.js.</p></div><div class="timeline-item"><h4>Frontend Developer</h4><div class="date">2018 - 2020</div><p>Elaboración de proyectos propios con React y Angular</p></div></div>`,
         hint: '✨ Más de 6 años transformando ideas en código.'
     },
     {
@@ -37,8 +37,8 @@ const PORTFOLIO_DATA = [
         starCount: 3,
         title: 'HABILIDADES',
         position: { x: -3, y: 2.5, z: 2 },
-        content: `<p>Mi arsenal tecnológico:</p><div class="skills-grid"><div class="skill-tag">⚛️ React</div><div class="skill-tag">🌐 Next.js</div><div class="skill-tag">🟢 Node.js</div><div class="skill-tag">📘 TypeScript</div><div class="skill-tag">🐍 Python</div><div class="skill-tag">🎨 Three.js</div><div class="skill-tag">🐳 Docker</div><div class="skill-tag">Multi agent IA</div><div class="skill-tag"> Angular</div><div class="skill-tag">🗄️ GraphQL</div><div class="skill-tag"> Machine learning</div><div class="skill-tag"> :octocat: GitHub </div><div class="skill-tag"> 🐚 Bash</div></div><div class="panel-hint" style="margin-top:20px;"><span>`,
-        hint: '🚀 Siempre aprendiendo nuevas tecnologías e inovación.'
+        content: `<p>Mi arsenal tecnológico:</p><div class="skills-grid"><div class="skill-tag">⚛️ React</div><div class="skill-tag">🌐 Next.js</div><div class="skill-tag">🟢 Node.js</div><div class="skill-tag">📘 🐍 Python</div><div class="skill-tag">🎨 Three.js</div><div class="skill-tag">🐳 Docker</div><div class="skill-tag">🤖 Multi agent IA</div><div class="skill-tag">Angular</div><div class="skill-tag">🗄️ GraphQL</div><div class="skill-tag">🧠 Machine learning</div><div class="skill-tag">🐙 GitHub</div><div class="skill-tag">🎓 Django</div><div class="skill-tag">FastAPI</div><div class="skill-tag">SQLAlchemy</div></div><div class="panel-hint" style="margin-top:20px;"><span>`,
+        hint: '🚀 Siempre aprendiendo nuevas tecnologías e innovación.'
     },
     {
         id: 'proyectos',
@@ -46,17 +46,17 @@ const PORTFOLIO_DATA = [
         starCount: 4,
         title: 'PROYECTOS',
         position: { x: 2, y: 2, z: 3 },
-        content: `<div class="project-card"><h4>Desarrollo de herramienta con python, para la corrección de flujos de trabajo en equipo de Arauco</h4><p>Desarrollo de herramienta para la clasificación de la región de Ñuble según su captación de agua, con datos opensource</p></div><div class="project-card"><h4>Plataforma React para visualización de variables espaciales</h4><p>Cálculo de parámetros como costos de bencina por trayecto</p></div><div class="project-card"><h4>🤖 Chatbot IA</h4><p>Asistente virtual con procesamiento de lenguaje natural y machine learning.</p></div>`,
+        content: `<div class="project-card"><h4>DWCI: Clasificación de captación de agua</h4><p>Desarrollo de herramienta para la clasificación de la región de Ñuble según su captación de agua, con datos opensource y API de GEE.</p><div class="video-preview"><iframe src="https://www.linkedin.com/embed/feed/update/urn:li:activity:7452037161308069888" title="Video explicativo DWCI" allowfullscreen></iframe></div></div><div class="project-card"><h4>Herramienta GEE en Arcgis Pro</h4><p>Conexión de Google Earth Engine en un entorno de Arcgis Pro mediante API para procesamiento geoespacial.</p><div class="video-preview"><iframe src="https://www.linkedin.com/embed/feed/update/urn:li:activity:7442620481632882690" title="Video explicativo GEE" allowfullscreen></iframe></div></div><div class="project-card"><h4>Plataforma React Virion</h4><p>Visor React espacial para el cálculo de costos de bencina y otros parámetros logísticos.</p><div class="video-preview"><iframe src="https://www.linkedin.com/embed/feed/update/urn:li:ugcPost:7446671099393875968" title="Video explicativo Virion" allowfullscreen></iframe></div></div><div class="project-card"><h4>SoilTool</h4><p>Aporte de Plugin para comunidad Qgis, para construir perfiles estratigráficos y edafológicos.</p><div class="video-preview"><iframe src="https://www.linkedin.com/embed/feed/update/urn:li:ugcPost:7458280445433053184" title="Video explicativo SoilTool" allowfullscreen></iframe></div></div>`,
         hint: '💻 Cada proyecto es una nueva aventura.'
     },
     {
-        id: 'contacto',
+        id: 'colaboraciones',
         stars: '★★★★★',
         starCount: 5,
-        title: 'CONTACTO',
+        title: 'Colaboraciones OpenSource',
         position: { x: -2, y: 2, z: -3 },
-        content: `<p>¿Quieres trabajar juntos? ¡Me encantaría escucharte!</p><p style="margin-top: 15px;"><strong style="color:#f5c542;">📧 Email:</strong><br>felipe.ignacio.geo@gmail.com</p><p><strong style="color:#f5c542;">💼 LinkedIn:</strong><br>https://www.linkedin.com/in/felipe-flores-dev-geo/</p><p><strong style="color:#f5c542;">🐙 GitHub:</strong><br>https://github.com/Felipe-Flores-creator/Felipe-Flores-creator</p><p><strong style="color:#f5c542;">🌍 Ubicación:</strong><br>Concepción, Chile (Remoto)</p>`,
-        hint: '📩 ¡No dudes en escribirme!'
+        content: `<p>Colaboración para QGIS</p><p style="margin-top: 15px;"></p><p>Colaboración para Municipalidad de Coelemu con índice de captación de suelo saturado</p>`,
+        hint: 'Colaboremos con la comunidad juntos.'
     },
     {
         id: 'educacion',
@@ -64,7 +64,7 @@ const PORTFOLIO_DATA = [
         starCount: 6,
         title: 'EDUCACIÓN',
         position: { x: 4, y: 2.5, z: 1 },
-        content: `<div class="timeline"><div class="timeline-item"><h4>Geógrafo</h4><div class="date">2017 - 2024</div><p>Universidad de Concepción</p></div><div class="timeline-item"><h4>Curso programación con IA</h4><div class="date">2021</div><p>Especialización en Machine Learning y Deep Learning con python</p></div><div class="timeline-item"><h4>Certificación Data Science</h4><div class="date">2022</div><p>Certificado en Computer vision y procesamiento de imágenes con python</p></div><div class="timeline-item"><h4>Certificación Bootcamp JavaScript</h4><div class="date">2026</div><p>Desarrollo Full-Stack moderno</p></div></div>`,
+        content: `<div class="timeline"><div class="timeline-item"><h4>Geógrafo</h4><div class="date">2018 - 2024</div><p>Universidad de Concepción</p></div><div class="timeline-item"><h4>Máster Python</h4><div class="date">2025</div><iframe src = "https://media.licdn.com/dms/image/v2/D4D2DAQGCLERkU68H5A/profile-treasury-image-shrink_8192_8192/B4DZuP0NEaKAAg-/0/1767644386716?e=1779249600&v=beta&t=Vo3AG3eTtEQxye9-qUZJv2T6H-akASyx9Npmrx_OxBk" title = "Título" allowfullscreen><p>Especialización en Machine Learning y Deep Learning con Python</p></div><div class="timeline-item"><iframe src =<h4>Certificación Data Science 2025</h4><div class="date">2022</div><p>Certificado en Computer Vision y procesamiento de imágenes con Python</p></div><div class="timeline-item"><h4>Certificación Bootcamp JavaScript</h4><div class="date">2026</div><p>Full-Stack Developer, U</p></div></div>`,
         hint: '📚 El aprendizaje nunca termina.'
     },
     {
@@ -73,7 +73,7 @@ const PORTFOLIO_DATA = [
         starCount: 7,
         title: 'LOGROS',
         position: { x: -4, y: 3, z: -1 },
-        content: `<div class="timeline"><div class="timeline-item"><h4>Participación y colaboración para proyectos de Municipalidad Coelemu.</h4><p>Reconocimiento por desarrollo de soluciones web innovadoras.</p></div><div class="timeline-item"><h4>⭐ Boot camp de 300 horas en JavaScript</h4><p>.</p></div><div class="timeline-item"><h4> Contribuciones Open Source en herramientas ambientales GIS</h4><p>Contribuidor activo en proyectos de la comunidada través de Linkedin.</p></div></div>`,
+        content: `<div class="timeline"><div class="timeline-item"><h4>Colaborador activo de plugins y herramientas en QGIS y QGIS-Python</h4><p>Reconocimiento por desarrollo de soluciones web innovadoras.</p></div><div class="timeline-item"><h4>⭐ Bootcamp de 300 horas en JavaScript</h4><p>Certificación e.</p></div><div class="timeline-item"><h4>Contribuciones Open Source en herramientas ambientales GIS con Python y JavaScript</h4><p>Contribución a la generación de información espacial de manera gratuita para la comunidad.</p></div></div>`,
         hint: '🎯 Cada logro es un escalón hacia nuevas metas.'
     }
 ];
